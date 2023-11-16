@@ -12,20 +12,23 @@ public class Main {
                 field[i][j] = 0;
             }
         }
-        putBoat(ran, field);
-        putBoat(ran, field);
-        putBoat(ran, field);
-        putBoat(ran, field);
-        putCruiser(ran,field);
-        putCruiser(ran,field);
         putCarrier(ran, field);
+        putCruiser(ran, field);
+        putCruiser(ran, field);
+        putBoat(ran, field);
+        putBoat(ran, field);
+        putBoat(ran, field);
+        putBoat(ran, field);
         for(int i = 0; i < 7; i++){
             for(int j = 0; j < 7;j++){
-                System.out.print(field[j][i] + "  ");
+                if(field[j][i] == 5) {
+                    System.out.print(field[j][i] + "  ");
+                } else if (field[j][i] != 5) {
+                    System.out.print(0 + "  ");
+                }
             }
             System.out.println();
         }
-
     }
     static void putCarrier(Random ran, int[][] field){
         boolean shipIsVertical = ran.nextBoolean();
@@ -67,8 +70,7 @@ public class Main {
         field[x1Coordinates.get(chosenVariant)][y1Coordinates.get(chosenVariant)] = 5;
         field[x2Coordinates.get(chosenVariant)][y2Coordinates.get(chosenVariant)] = 5;
         field[x3Coordinates.get(chosenVariant)][y3Coordinates.get(chosenVariant)] = 5;
-        occupyAround(field, x1Coordinates.get(chosenVariant), y1Coordinates.get(chosenVariant), shipIsVertical, 1);
-        System.out.println(shipIsVertical);
+        occupyAround(field, x1Coordinates.get(chosenVariant), y1Coordinates.get(chosenVariant), shipIsVertical, 3);
     }
     static void putBoat(Random ran, int[][] field){
         boolean shipIsVertical = true;
@@ -120,9 +122,75 @@ public class Main {
         field[x1Coordinates.get(chosenVariant)][y1Coordinates.get(chosenVariant)] = 5;
         field[x2Coordinates.get(chosenVariant)][y2Coordinates.get(chosenVariant)] = 5;
         occupyAround(field, x1Coordinates.get(chosenVariant), y1Coordinates.get(chosenVariant), shipIsVertical, 2);
-        System.out.println(shipIsVertical);
     }
     static void occupyAround(int[][] field, int x, int y, boolean shipIsVertical, int shipSize){
-
+        if(shipIsVertical == true){
+            //Sides
+            if(x > 0){
+                for(int i = 0; i < shipSize; i++){
+                    field[x-1][y+i] = 1;
+                }
+            }
+            if(x < 6){
+                for(int i = 0; i < shipSize; i++){
+                    field[x+1][y+i] = 1;
+                }
+            }
+            if(y > 0){
+                field[x][y-1] = 1;
+            }
+            if(y < 7 - shipSize){
+                field[x][y+shipSize] = 1;
+            }
+            //Corners
+            if(x > 0 && y > 0){
+                field[x-1][y-1] = 1;
+            }
+            if(x > 0 && y < 7 - shipSize){
+                field[x-1][y + shipSize] = 1;
+            }
+            if(x < 6 && y > 0){
+                field[x+1][y-1] = 1;
+            }
+            if(x < 6 && y < 7 - shipSize){
+                field[x+1][y+shipSize] = 1;
+            }
+        }
+        else if(shipIsVertical == false){
+            //Sides
+            if(x > 0){
+                field[x-1][y] = 1;
+            }
+            if(x < 7 -shipSize){
+                field[x+shipSize][y] = 1;
+            }
+            if(y > 0){
+                for(int i = 0;i < shipSize; i++){
+                    field[x+i][y-1] = 1;
+                }
+            }
+            if(y < 6){
+                for(int i = 0;i < shipSize; i++){
+                    field[x+i][y+1] = 1;
+                }
+            }
+            //Corners
+            if(x > 0 && y > 0){
+                field[x-1][y-1] = 1;
+            }
+            if(x > 0 && y < 6){
+                field[x-1][y+1] = 1;
+            }
+            if(x < 7 - shipSize && y > 0){
+                field[x+shipSize][y-1] = 1;
+            }
+            if(x < 7 - shipSize && y < 6){
+                field[x+shipSize][y+1] = 1;
+            }
+        }
+    }
+    static void clearScreen(){
+        System.out.print("\033[H\033[2J");
+        System.out.flush();
     }
 }
