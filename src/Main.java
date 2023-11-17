@@ -23,11 +23,11 @@ public class Main {
                     field[i][j] = 0;
                 }
             }
-            //putCarrier(ran, field);
+            putCarrier(ran, field);
             putCruiser(ran, field);
-            //putCruiser(ran, field);
+            putCruiser(ran, field);
             for(int i = 0; i < 4; i++){
-                //putBoat(ran, field);
+                putBoat(ran, field);
             }
             for(int i = 0; i < 7; i++){
                 for(int j = 0; j < 7;j++){
@@ -37,7 +37,7 @@ public class Main {
                 }
                 System.out.println();
             }
-            boolean gameEnded = gameover(field);
+            boolean gameEnded = gameOver(field);
             while(gameEnded == false){
                 System.out.println("Enter coordinates: Example X Y");
                 int xShot = sc.nextInt()-1;
@@ -56,13 +56,22 @@ public class Main {
                                 System.out.print("O" + "   ");
                             }
                             else if(field[j][i] == -5){
-                                System.out.print("x" + "   ");
+                                if(IsShipDestroyed(field, j, i) == false){
+                                    System.out.print("X" + "   ");
+                                } else if (IsShipDestroyed(field, j, i) == true) {
+                                    System.out.print("F" + "   ");
+                                }
                             }
                             else{
                                 System.out.print("*" + "   ");
                             }
                         }
                         System.out.println();
+                    }
+                    if(IsShipDestroyed(field, xShot, yShot) == true && field[xShot][yShot] == -5) {
+                        System.out.println("Ship Destroyed!");
+                    } else if (field[xShot][yShot] == -5) {
+                        System.out.println("You Hit The Ship!");
                     }
                     continue;
                 }
@@ -78,7 +87,11 @@ public class Main {
                             System.out.print("O" + "   ");
                         }
                         else if(field[j][i] == -5){
-                            System.out.print("x" + "   ");
+                            if(IsShipDestroyed(field, j, i) == false){
+                                System.out.print("X" + "   ");
+                            } else if (IsShipDestroyed(field, j, i) == true) {
+                                System.out.print("F" + "   ");
+                            }
                         }
                         else{
                             System.out.print("*" + "   ");
@@ -86,11 +99,18 @@ public class Main {
                     }
                     System.out.println();
                 }
+                if(IsShipDestroyed(field, xShot, yShot) == true && field[xShot][yShot] == -5) {
+                    System.out.println("Ship Destroyed!");
+                } else if (field[xShot][yShot] == -5) {
+                    System.out.println("You Hit The Ship!");
+                } else if (field[xShot][yShot] != -5) {
+                    System.out.println("Miss!");
+                }
                 shots += 1;
-                gameEnded = gameover(field);
+                gameEnded = gameOver(field);
             }
             scores.add(shots);
-            System.out.println("Congratulations! You have destroyed every ship!\nPlay again?");
+            System.out.println("Congratulations! You have destroyed every ship!\nPlay again?(Yes/No)");
             sc.nextLine();
             String answer = sc.nextLine().trim().toLowerCase();
             if(answer.equals("yes")){
@@ -260,10 +280,37 @@ public class Main {
             }
         }
     }
-    static void checkShip(){
-
+    static boolean IsShipDestroyed(int[][] field, int j, int i){
+        int answer = 0;
+        if(j > 0 && j < 6 && i > 0 && i < 6) {
+            if (field[j - 1][i] != 5 && field[j + 1][i] != 5 && field[j][i - 1] != 5 && field[j][i + 1] != 5) {
+                return true;
+            }
+        }
+        //check Sides
+        if(j < 6){
+            if(field[j+1][i] == 5){
+                return false;
+            }
+        }
+        if(j > 0){
+            if(field[j-1][i] == 5){
+                return false;
+            }
+        }
+        if(i < 6){
+            if(field[j][i+1] == 5){
+                return false;
+            }
+        }
+        if(i > 0){
+            if(field[j][i-1] == 5){
+                return false;
+            }
+        }
+        return true;
     }
-    static boolean gameover(int[][] field){
+    static boolean gameOver(int[][] field){
         boolean end = true;
         for(int i = 0; i < 7;i++){
             for(int j = 0; j < 7;j++){
