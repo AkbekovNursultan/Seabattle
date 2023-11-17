@@ -23,11 +23,11 @@ public class Main {
                     field[i][j] = 0;
                 }
             }
-            putCarrier(ran, field);
-            putCruiser(ran, field);
+            //putCarrier(ran, field);
+            //putCruiser(ran, field);
             putCruiser(ran, field);
             for(int i = 0; i < 4; i++){
-                putBoat(ran, field);
+                //putBoat(ran, field);
             }
             for(int i = 0; i < 7; i++){
                 for(int j = 0; j < 7;j++){
@@ -321,12 +321,22 @@ public class Main {
         }
         return end;
     }
-    static void endGame(ArrayList<String> players,ArrayList<Integer> scores){
+    static void endGame(ArrayList<String> players, ArrayList<Integer> scores){
         System.out.println("Scoreboard:");
-        for(int i = 0; i < players.size(); i++){
-            System.out.println(players.get(i) + " - " + scores.get(i));
+        int place = 1;
+        while (players.size() > 0){
+            int minScore = 50;
+            int minScoreIndex = -1;
+            for (int i = 0; i < players.size(); i++) {
+                if (minScore > scores.get(i)){
+                    minScore = scores.get(i);
+                    minScoreIndex = i;
+                }
+            }
+            System.out.println(place++ + " - " + players.get(minScoreIndex) + "(" + minScore + " shots )");
+            players.remove(minScoreIndex);
+            scores.remove(minScoreIndex);
         }
-
     }
     static void clearScreen(){
         for(int i = 0; i < 5; i++){
