@@ -1,33 +1,104 @@
+import java.sql.SQLOutput;
 import java.util.Scanner;
 import java.util.Random;
 import java.util.ArrayList;
 
 public class Main {
     public static void main(String[] args) {
-        Scanner sc = new Scanner(System.in);
-        Random ran = new Random();
-        int[][] field = new int[7][7];
-        for(int i = 0; i < 7;i++){
-            for(int j = 0; j < 7;j++){
-                field[i][j] = 0;
-            }
-        }
-        putCarrier(ran, field);
-        putCruiser(ran, field);
-        putCruiser(ran, field);
-        putBoat(ran, field);
-        putBoat(ran, field);
-        putBoat(ran, field);
-        putBoat(ran, field);
-        for(int i = 0; i < 7; i++){
-            for(int j = 0; j < 7;j++){
-                if(field[j][i] == 5) {
-                    System.out.print(field[j][i] + "  ");
-                } else if (field[j][i] != 5) {
-                    System.out.print(0 + "  ");
+        ArrayList<String> players = new ArrayList<String>();
+        ArrayList<Integer> scores = new ArrayList<Integer>();
+        gameplay(players, scores);
+        endGame(players, scores);
+    }
+    static void gameplay(ArrayList<String> players, ArrayList<Integer> scores){
+        while(true){
+            int shots = 0;
+            Scanner sc = new Scanner(System.in);
+            System.out.println("Player name:");
+            players.add(sc.nextLine());
+            Random ran = new Random();
+            int[][] field = new int[7][7];
+            for(int i = 0; i < 7;i++){
+                for(int j = 0; j < 7;j++){
+                    field[i][j] = 0;
                 }
             }
-            System.out.println();
+            //putCarrier(ran, field);
+            putCruiser(ran, field);
+            //putCruiser(ran, field);
+            for(int i = 0; i < 4; i++){
+                //putBoat(ran, field);
+            }
+            for(int i = 0; i < 7; i++){
+                for(int j = 0; j < 7;j++){
+
+                    System.out.print(field[j][i] + "  ");
+
+                }
+                System.out.println();
+            }
+            boolean gameEnded = gameover(field);
+            while(gameEnded == false){
+                System.out.println("Enter coordinates: Example X Y");
+                int xShot = sc.nextInt()-1;
+                int yShot = sc.nextInt()-1;
+                while(xShot < 0|| xShot > 6 || yShot > 6 || yShot < 0){
+                    System.out.println("Invalid input.");
+                    xShot = sc.nextInt()-1;
+                    yShot = sc.nextInt()-1;
+                }
+                clearScreen();
+                if(field[xShot][yShot] == -5 || field[xShot][yShot] == -1){
+                    System.out.println("Already shot here.");
+                    for(int i = 0; i < 7; i++){
+                        for(int j = 0; j < 7;j++){
+                            if(field[j][i] == -1){
+                                System.out.print("O" + "   ");
+                            }
+                            else if(field[j][i] == -5){
+                                System.out.print("x" + "   ");
+                            }
+                            else{
+                                System.out.print("*" + "   ");
+                            }
+                        }
+                        System.out.println();
+                    }
+                    continue;
+                }
+                if(field[xShot][yShot] == 5){
+                    field[xShot][yShot] = -5;
+                }
+                else if(field[xShot][yShot] == 1 || field[xShot][yShot] == 0){
+                    field[xShot][yShot] = -1;
+                }
+                for(int i = 0; i < 7; i++){
+                    for(int j = 0; j < 7;j++){
+                        if(field[j][i] == -1){
+                            System.out.print("O" + "   ");
+                        }
+                        else if(field[j][i] == -5){
+                            System.out.print("x" + "   ");
+                        }
+                        else{
+                            System.out.print("*" + "   ");
+                        }
+                    }
+                    System.out.println();
+                }
+                shots += 1;
+                gameEnded = gameover(field);
+            }
+            scores.add(shots);
+            System.out.println("Congratulations! You have destroyed every ship!\nPlay again?");
+            sc.nextLine();
+            String answer = sc.nextLine().trim().toLowerCase();
+            if(answer.equals("yes")){
+                clearScreen();
+            }
+            else if(answer.equals("no")){
+                break;
+            }
         }
     }
     static void putCarrier(Random ran, int[][] field){
@@ -189,8 +260,30 @@ public class Main {
             }
         }
     }
+    static void checkShip(){
+
+    }
+    static boolean gameover(int[][] field){
+        boolean end = true;
+        for(int i = 0; i < 7;i++){
+            for(int j = 0; j < 7;j++){
+                if(field[i][j] == 5){
+                    end = false;
+                }
+            }
+        }
+        return end;
+    }
+    static void endGame(ArrayList<String> players,ArrayList<Integer> scores){
+        System.out.println("Scoreboard:");
+        for(int i = 0; i < players.size(); i++){
+            System.out.println(players.get(i) + " - " + scores.get(i));
+        }
+
+    }
     static void clearScreen(){
-        System.out.print("\033[H\033[2J");
-        System.out.flush();
+        for(int i = 0; i < 5; i++){
+            System.out.println();
+        }
     }
 }
