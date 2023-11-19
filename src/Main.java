@@ -23,19 +23,11 @@ public class Main {
                     field[i][j] = 0;
                 }
             }
-            //putCarrier(ran, field);
-            //putCruiser(ran, field);
+            putCarrier(ran, field);
+            putCruiser(ran, field);
             putCruiser(ran, field);
             for(int i = 0; i < 4; i++){
-                //putBoat(ran, field);
-            }
-            for(int i = 0; i < 7; i++){
-                for(int j = 0; j < 7;j++){
-
-                    System.out.print(field[j][i] + "  ");
-
-                }
-                System.out.println();
+                putBoat(ran, field);
             }
             boolean gameEnded = gameOver(field);
             while(gameEnded == false){
@@ -50,7 +42,9 @@ public class Main {
                 clearScreen();
                 if(field[xShot][yShot] == -5 || field[xShot][yShot] == -1){
                     System.out.println("Already shot here.");
+                    System.out.println("     1   2   3   4   5   6   7");
                     for(int i = 0; i < 7; i++){
+                        System.out.print(i+1 + ")   ");
                         for(int j = 0; j < 7;j++){
                             if(field[j][i] == -1){
                                 System.out.print("O" + "   ");
@@ -81,7 +75,9 @@ public class Main {
                 else if(field[xShot][yShot] == 1 || field[xShot][yShot] == 0){
                     field[xShot][yShot] = -1;
                 }
+                System.out.println("     1   2   3   4   5   6   7");
                 for(int i = 0; i < 7; i++){
+                    System.out.print(i+1 + ")   ");
                     for(int j = 0; j < 7;j++){
                         if(field[j][i] == -1){
                             System.out.print("O" + "   ");
@@ -281,31 +277,41 @@ public class Main {
         }
     }
     static boolean IsShipDestroyed(int[][] field, int j, int i){
-        int answer = 0;
-        if(j > 0 && j < 6 && i > 0 && i < 6) {
-            if (field[j - 1][i] != 5 && field[j + 1][i] != 5 && field[j][i - 1] != 5 && field[j][i + 1] != 5) {
-                return true;
-            }
-        }
         //check Sides
         if(j < 6){
             if(field[j+1][i] == 5){
                 return false;
+            } else if (j < 5) {
+                if(field[j+1][i] == -5 && field[j+2][i] == 5){
+                    return false;
+                }
             }
         }
         if(j > 0){
             if(field[j-1][i] == 5){
                 return false;
+            } else if (j > 1) {
+                if(field[j-1][i] == -5 && field[j-2][i] == 5){
+                    return false;
+                }
             }
         }
         if(i < 6){
             if(field[j][i+1] == 5){
                 return false;
+            } else if (i < 5) {
+                if(field[j][i+1] == -5 && field[j][i+2] == 5){
+                    return false;
+                }
             }
         }
         if(i > 0){
             if(field[j][i-1] == 5){
                 return false;
+            } else if (i > 1) {
+                if(field[j][i-1] == -5 && field[j][i-2] == 5){
+                    return false;
+                }
             }
         }
         return true;
